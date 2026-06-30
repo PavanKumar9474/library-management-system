@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System | Books</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="container navbar">
+
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <div>
+                <h2>Library Management System</h2>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="books.html" class="active">Books</a></li>
+                <li><a href="add-book.html">Add Book</a></li>
+                <li><a href="issue-book.html">Issue Book</a></li>
+                <li><a href="return-book.html">Return Book</a></li>
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="card">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:25px;">
+
+                <div>
+                    <h1 class="card-title">Books Collection</h1>
+                    <p>Search, view, update and delete books from the library.</p>
+                </div>
+
+                <a href="add-book.html" class="btn btn-primary">
+                    Add New Book
+                </a>
+
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchBook"
+                    placeholder="Search by Title, Author, ISBN or Category"
+                >
+
+                <button class="btn btn-primary" id="searchBtn">
+                    Search
+                </button>
+
+                <button class="btn btn-outline" id="refreshBooks">
+                    Refresh
+                </button>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Available</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="booksTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2026 Library Management System | Node.js • Express.js • MongoDB
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

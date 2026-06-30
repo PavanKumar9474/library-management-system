@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Book | Library Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="container navbar">
+
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <div>
+                <h2>Library Management System</h2>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="add-book.html">Add Book</a></li>
+                <li><a href="issue-book.html" class="active">Issue Book</a></li>
+                <li><a href="return-book.html">Return Book</a></li>
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h1 class="form-title">Issue Book</h1>
+
+            <div id="message" class="message"></div>
+
+            <form id="issueBookForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="bookTitle">Book Title</label>
+
+                        <input
+                            type="text"
+                            id="bookTitle"
+                            name="bookTitle"
+                            placeholder="Enter Book Title"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentName">Student Name</label>
+                        <input
+                            type="text"
+                            id="studentName"
+                            name="studentName"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentId">Student ID</label>
+                        <input
+                            type="text"
+                            id="studentId"
+                            name="studentId"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueDate">Issue Date</label>
+                        <input
+                            type="date"
+                            id="issueDate"
+                            name="issueDate"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="margin-top:20px;">
+                    <label for="remarks">Remarks</label>
+                    <textarea
+                        id="remarks"
+                        name="remarks"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        Issue Book
+                    </button>
+
+                    <button
+                        type="reset"
+                        class="btn btn-outline"
+                    >
+                        Reset
+                    </button>
+
+                    <a
+                        href="books.html"
+                        class="btn btn-primary"
+                    >
+                        View Books
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    © 2026 Library Management System | Node.js • Express.js • MongoDB
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
