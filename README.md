@@ -37,7 +37,7 @@ This project demonstrates CRUD operations, REST APIs, authentication, and databa
 - Delete Books
 - Search Books
 - Book Categories
-- Book Availability Status
+- Book Availability status
 
 ---
 
