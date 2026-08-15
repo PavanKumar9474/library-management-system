@@ -191,7 +191,7 @@ JWT_SECRET=your_secret_key
 
 ---
 
-# 📸 Screenshots
+# 📸 Screenshots :
 
 ## 🏠 Home Page
 
