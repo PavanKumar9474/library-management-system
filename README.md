@@ -434,7 +434,7 @@ If you found this project useful,
 
 ## ❤️ Thank You
 
-Made with ❤️ by **Pavan Kumar**
+Made with ❤️ by **A Pavan Kumar**
 
 **Don't forget to ⭐ Star this repository if you found it useful!**
 
