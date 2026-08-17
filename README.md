@@ -24,7 +24,7 @@ Library Management System is a full-stack web application that helps libraries e
 
 The application allows librarians to maintain book inventories while users can browse available books, issue books, and return them with ease.
 
-This project demonstrates CRUD operations, REST APIs, authentication, and database management using the MERN stack.
+This project demonstrates CRUD operations, REST APIs, authentication, and database management using the MERN stack
 
 ---
 
