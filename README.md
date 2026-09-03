@@ -378,7 +378,7 @@ Contributions are welcome.
 git checkout -b feature-name
 ```
 
-3. Commit your changes
+3. Commit your change
 
 ```bash
 git commit -m "Added New Feature"
