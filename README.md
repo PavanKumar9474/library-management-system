@@ -179,7 +179,7 @@ npm start
 
 # 🌐 Environment Variables
 
-Create a `.env` file in the backend folder .
+Create a `.env` file in the backend folder.
 
 ```env
 PORT=5000
@@ -326,7 +326,7 @@ GET /api/history
 
 ---
 
-# 📱 Responsive Design
+# 📱 Responsive Designs
 
 Supports
 
