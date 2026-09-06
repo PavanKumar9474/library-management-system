@@ -426,7 +426,7 @@ If you found this project useful,
 
 🍴 Fork this repository
 
-📢 Share it with others
+📢 Share it with others.
 
 ---
 
