@@ -1,5 +1,5 @@
 // API Base URL
-const API_URL = "http://localhost:5000/api/";
+const API_URL = window.location.origin + "/api/";
 
 // Utility function to show messages
 function showMessage(elementId, message, type = "success") {
@@ -29,7 +29,7 @@ function formatDate(dateString) {
 // ==================== DASHBOARD ====================
 async function loadDashboard() {
     try {
-        const response = await fetch(`${API_URL}/api/dashboard/`);
+        const response = await fetch(`${API_URL}dashboard/`);
         const result = await response.json();
         
         if (result.success) {
@@ -39,6 +39,9 @@ async function loadDashboard() {
             document.getElementById("issuedBooks").textContent = data.issuedBooks;
             document.getElementById("returnedBooks").textContent = data.returnedToday;
             
+            // Render SVG stats chart
+            renderLibraryStatsChart(data);
+
             // Load recent books
             await loadRecentBooks();
         }
@@ -47,9 +50,81 @@ async function loadDashboard() {
     }
 }
 
+function renderLibraryStatsChart(data) {
+    const svg = document.getElementById("libraryStatsChart");
+    if (!svg) return;
+    
+    svg.setAttribute("viewBox", "0 0 600 220");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    
+    const available = data.availableBooks || 0;
+    const issued = data.issuedBooks || 0;
+    const total = data.totalBooks || 1;
+    
+    const maxVal = Math.max(total, available, issued, 10);
+    const scale = 150 / maxVal;
+    
+    const hAvailable = available * scale;
+    const hIssued = issued * scale;
+    const hTotal = total * scale;
+    
+    svg.innerHTML = `
+        <defs>
+            <linearGradient id="gradPrimary" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.15"/>
+            </linearGradient>
+            <linearGradient id="gradSecondary" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.15"/>
+            </linearGradient>
+            <linearGradient id="gradTotal" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#059669" stop-opacity="0.15"/>
+            </linearGradient>
+        </defs>
+        
+        <!-- Grid Lines -->
+        <line x1="50" y1="30" x2="550" y2="30" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+        <line x1="50" y1="80" x2="550" y2="80" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+        <line x1="50" y1="130" x2="550" y2="130" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+        <line x1="50" y1="180" x2="550" y2="180" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+        
+        <!-- Y Axis Labels -->
+        <text x="35" y="184" fill="#64748b" font-size="11" font-weight="600" text-anchor="end">0</text>
+        <text x="35" y="134" fill="#64748b" font-size="11" font-weight="600" text-anchor="end">${Math.round(maxVal * 0.33)}</text>
+        <text x="35" y="84" fill="#64748b" font-size="11" font-weight="600" text-anchor="end">${Math.round(maxVal * 0.66)}</text>
+        <text x="35" y="34" fill="#64748b" font-size="11" font-weight="600" text-anchor="end">${maxVal}</text>
+
+        <!-- Bar 1: Total Books -->
+        <rect class="chart-bar" x="120" y="${180 - hTotal}" width="50" height="${hTotal}" rx="6" fill="url(#gradTotal)" stroke="#10b981" stroke-width="1" style="transition: all 0.5s ease-out; cursor: pointer;">
+            <animate attributeName="height" from="0" to="${hTotal}" dur="0.8s" fill="freeze" />
+            <animate attributeName="y" from="180" to="${180 - hTotal}" dur="0.8s" fill="freeze" />
+        </rect>
+        <text x="145" y="${175 - hTotal}" fill="#10b981" font-size="12" font-weight="bold" text-anchor="middle">${total}</text>
+        <text x="145" y="202" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">Total Inventory</text>
+
+        <!-- Bar 2: Available Books -->
+        <rect class="chart-bar" x="270" y="${180 - hAvailable}" width="50" height="${hAvailable}" rx="6" fill="url(#gradPrimary)" stroke="#3b82f6" stroke-width="1" style="transition: all 0.5s ease-out; cursor: pointer;">
+            <animate attributeName="height" from="0" to="${hAvailable}" dur="0.8s" fill="freeze" />
+            <animate attributeName="y" from="180" to="${180 - hAvailable}" dur="0.8s" fill="freeze" />
+        </rect>
+        <text x="295" y="${175 - hAvailable}" fill="#3b82f6" font-size="12" font-weight="bold" text-anchor="middle">${available}</text>
+        <text x="295" y="202" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">Available</text>
+
+        <!-- Bar 3: Issued Books -->
+        <rect class="chart-bar" x="420" y="${180 - hIssued}" width="50" height="${hIssued}" rx="6" fill="url(#gradSecondary)" stroke="#8b5cf6" stroke-width="1" style="transition: all 0.5s ease-out; cursor: pointer;">
+            <animate attributeName="height" from="0" to="${hIssued}" dur="0.8s" fill="freeze" />
+            <animate attributeName="y" from="180" to="${180 - hIssued}" dur="0.8s" fill="freeze" />
+        </rect>
+        <text x="445" y="${175 - hIssued}" fill="#a78bfa" font-size="12" font-weight="bold" text-anchor="middle">${issued}</text>
+        <text x="445" y="202" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">Currently Issued</text>
+    `;
+}
+
 async function loadRecentBooks() {
     try {
-        const response = await fetch(`${API_URL}/api/books/?limit=5`);
+        const response = await fetch(`${API_URL}books/?limit=5`);
         const result = await response.json();
         
         if (result.success) {
@@ -81,8 +156,8 @@ let currentSearch = "";
 async function loadBooks(search = "") {
     try {
         const url = search 
-            ? `${API_URL}/books/?search=${encodeURIComponent(search)}`
-            : `${API_URL}/books/`;
+            ? `${API_URL}books/?search=${encodeURIComponent(search)}`
+            : `${API_URL}books/`;
         
         const response = await fetch(url);
         const result = await response.json();
@@ -294,7 +369,11 @@ async function handleIssueBook(e) {
     };
     
     try {
-        const response = await fetch(`${API_URL}/api/issues`, {method: "POST",headers: {"Content-Type": "application/json"},body: JSON.stringify(data)});
+        const response = await fetch(`${API_URL}issues`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
         const result = await response.json();
     
         if (result.success) {
@@ -319,7 +398,7 @@ async function handleReturnBook(e) {
     const issueId = formData.get("issueId");
     
     try {
-        const response = await fetch(`${API_URL}/api/issue/return/${issueId}`, {
+        const response = await fetch(`${API_URL}issues/return/${issueId}`, {
             method: "PUT"
         });
         
