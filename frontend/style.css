@@ -453,13 +453,13 @@ textarea {
   letter-spacing: 0.5px;
 }
 
-.available {
+.available, .badge-success {
   background: rgba(16, 185, 129, 0.15);
   color: #6ee7b7;
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-.issued {
+.issued, .badge-danger {
   background: rgba(239, 68, 68, 0.15);
   color: #fca5a5;
   border: 1px solid rgba(239, 68, 68, 0.3);

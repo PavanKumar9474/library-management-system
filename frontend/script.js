@@ -355,6 +355,28 @@ async function handleAddBook(e) {
 }
 
 // ==================== ISSUE BOOK ====================
+async function populateIssueBookDropdown() {
+    try {
+        const response = await fetch(`${API_URL}books/`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const select = document.getElementById("bookId");
+            if (select) {
+                const availableBooks = result.data.filter(b => b.available > 0);
+                if (availableBooks.length === 0) {
+                    select.innerHTML = '<option value="" disabled selected>No books available to issue</option>';
+                    return;
+                }
+                select.innerHTML = '<option value="" disabled selected>Select a book...</option>' + 
+                    availableBooks.map(b => `<option value="${b._id}">${b.title} (by ${b.author})</option>`).join("");
+            }
+        }
+    } catch (error) {
+        console.error("Error loading books for issue:", error);
+    }
+}
+
 async function handleIssueBook(e) {
     e.preventDefault();
     
@@ -362,7 +384,7 @@ async function handleIssueBook(e) {
     const formData = new FormData(form);
     
     const data = {
-        bookTitle: formData.get("bookTitle"),
+        bookId: formData.get("bookId"),
         studentName: formData.get("studentName"),
         studentId: formData.get("studentId"),
         issueDate: formData.get("issueDate")
@@ -389,13 +411,50 @@ async function handleIssueBook(e) {
 }
 
 // ==================== RETURN BOOK ====================
-async function handleReturnBook(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const formData = new FormData(form);
-    
-    const issueId = formData.get("issueId");
+async function loadIssues() {
+    try {
+        const response = await fetch(`${API_URL}issues/`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const tableBody = document.getElementById("issuesTable");
+            if (!tableBody) return;
+            
+            const activeIssues = result.data.filter(issue => issue.status === "Issued");
+            
+            if (activeIssues.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px;">
+                            No active issues found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = activeIssues.map(issue => `
+                <tr>
+                    <td>${issue.studentName}</td>
+                    <td>${issue.studentId}</td>
+                    <td>${issue.bookTitle}</td>
+                    <td>${formatDate(issue.issueDate)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success" onclick="returnBookById('${issue._id}')">
+                            Return
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+        }
+    } catch (error) {
+        console.error("Error loading issues:", error);
+        showMessage("message", "Error loading active issues", "error");
+    }
+}
+
+async function returnBookById(issueId) {
+    if (!confirm("Are you sure you want to return this book?")) return;
     
     try {
         const response = await fetch(`${API_URL}issues/return/${issueId}`, {
@@ -406,7 +465,7 @@ async function handleReturnBook(e) {
         
         if (result.success) {
             showMessage("message", result.message, "success");
-            form.reset();
+            loadIssues();
         } else {
             showMessage("message", result.message || "Error returning book", "error");
         }
@@ -462,6 +521,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Issue Book page
     if (currentPage === "issue-book.html") {
+        populateIssueBookDropdown();
         const issueBookForm = document.getElementById("issueBookForm");
         if (issueBookForm) {
             issueBookForm.addEventListener("submit", handleIssueBook);
@@ -470,9 +530,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Return Book page
     if (currentPage === "return-book.html") {
-        const returnBookForm = document.getElementById("returnBookForm");
-        if (returnBookForm) {
-            returnBookForm.addEventListener("submit", handleReturnBook);
-        }
+        loadIssues();
     }
 });
