@@ -8,7 +8,8 @@ const issueBook = async (req, res) => {
             studentName,
             studentId,
             bookId,
-            issueDate
+            issueDate,
+            remarks
         } = req.body;
 
         if (
@@ -62,7 +63,8 @@ const issueBook = async (req, res) => {
             studentId,
             bookTitle: book.title,
             issueDate,
-            status: "Issued"
+            status: "Issued",
+            remarks
         });
 
         res.status(201).json({

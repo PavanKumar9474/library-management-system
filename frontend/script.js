@@ -387,7 +387,8 @@ async function handleIssueBook(e) {
         bookId: formData.get("bookId"),
         studentName: formData.get("studentName"),
         studentId: formData.get("studentId"),
-        issueDate: formData.get("issueDate")
+        issueDate: formData.get("issueDate"),
+        remarks: formData.get("remarks")
     };
     
     try {
@@ -425,7 +426,7 @@ async function loadIssues() {
             if (activeIssues.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px;">
+                        <td colspan="6" style="text-align: center; padding: 40px;">
                             No active issues found
                         </td>
                     </tr>
@@ -439,6 +440,7 @@ async function loadIssues() {
                     <td>${issue.studentId}</td>
                     <td>${issue.bookTitle}</td>
                     <td>${formatDate(issue.issueDate)}</td>
+                    <td>${issue.remarks || '-'}</td>
                     <td>
                         <button class="btn btn-sm btn-success" onclick="returnBookById('${issue._id}')">
                             Return
