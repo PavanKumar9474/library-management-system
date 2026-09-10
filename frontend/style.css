@@ -1,6 +1,4 @@
-/* =========================================
-   LIBRARY PORTAL STYLESHEET (PREMIUM THEME)
-========================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 * {
@@ -41,9 +39,6 @@ body {
   padding: 0 20px;
 }
 
-/* =========================================
-   STICKY GLASS NAVBAR
-========================================= */
 header {
   background: rgba(17, 24, 39, 0.85);
   backdrop-filter: blur(20px);
@@ -86,7 +81,6 @@ header {
   font-weight: 800;
   letter-spacing: -0.5px;
   background: linear-gradient(135deg, #ffffff, #93c5fd);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -112,9 +106,7 @@ nav ul li a.active {
   color: #60a5fa;
 }
 
-/* =========================================
-   HERO / MAIN CONTENT
-========================================= */
+
 .hero {
   padding: 40px 0;
 }
@@ -147,9 +139,7 @@ nav ul li a.active {
   letter-spacing: -0.5px;
 }
 
-/* =========================================
-   STATISTICS CARD
-========================================= */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -212,9 +202,7 @@ nav ul li a.active {
   }
 }
 
-/* =========================================
-   DATA TABLES
-========================================= */
+
 .table-responsive {
   overflow-x: auto;
   border-radius: 16px;
@@ -256,9 +244,7 @@ table tbody tr:hover {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* =========================================
-   BUTTONS SYSTEM
-========================================= */
+
 .btn {
   border: none;
   cursor: pointer;
@@ -337,9 +323,6 @@ table tbody tr:hover {
   flex-wrap: wrap;
 }
 
-/* =========================================
-   FORMS & INPUT GROUPS
-========================================= */
 .form-card {
   max-width: 800px;
   margin: 40px auto;
@@ -413,9 +396,7 @@ textarea {
   flex-wrap: wrap;
 }
 
-/* =========================================
-   SEARCH
-========================================= */
+
 .search-box {
   display: flex;
   gap: 15px;
@@ -439,9 +420,7 @@ textarea {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
-/* =========================================
-   BADGES & STATUS
-========================================= */
+
 .badge {
   display: inline-block;
   padding: 6px 12px;
@@ -471,9 +450,7 @@ textarea {
   border: 1px solid rgba(2, 132, 199, 0.3);
 }
 
-/* =========================================
-   FOOTER
-========================================= */
+
 footer {
   margin-top: 60px;
   background: rgba(17, 24, 39, 0.6);
@@ -485,9 +462,7 @@ footer {
   font-size: 14px;
 }
 
-/* =========================================
-   MESSAGES SYSTEM
-========================================= */
+
 .message {
   margin-bottom: 24px;
   padding: 16px;
@@ -518,9 +493,7 @@ footer {
   font-size: 15px;
 }
 
-/* =========================================
-   QUICK LINKS
-========================================= */
+
 .quick-links {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -555,9 +528,7 @@ footer {
   font-size: 14px;
 }
 
-/* =========================================
-   SCROLLBAR STYLING
-========================================= */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -576,9 +547,7 @@ footer {
   background: transparent;
 }
 
-/* =========================================
-   CHART COMPONENT
-========================================= */
+
 .chart-container-card {
   transition: var(--transition);
 }
