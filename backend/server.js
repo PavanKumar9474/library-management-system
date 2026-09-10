@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const bookRoutes = require("./routes/bookRoutes");
 const issueRoutes = require("./routes/issueRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -21,6 +22,7 @@ connectDB();
 app.use("/api/books", bookRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/auth", authRoutes);
 
 // Serve static files from frontend directory
 app.use(express.static("../frontend"));

@@ -1,6 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
+const { protect } = require("../middleware/authMiddleware");
 
 const {
     issueBook,
@@ -8,10 +9,10 @@ const {
     returnBook
 } = require("../controllers/issueController");
 
-router.post("/", issueBook);
+router.post("/", protect, issueBook);
 
-router.get("/", getIssuedBooks);
+router.get("/", protect, getIssuedBooks);
 
-router.put("/return/:id", returnBook);
+router.put("/return/:id", protect, returnBook);
 
 module.exports = router;
