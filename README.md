@@ -5,7 +5,7 @@
 ### A Modern Library Management Web Application
 
 <p align="center">
-Manage books,borrowers,qnd library operations efficiently.
+Manage books,borrowers,and library operations efficiently.
 </p>
 
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react)
