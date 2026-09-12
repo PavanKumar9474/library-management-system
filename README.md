@@ -66,7 +66,6 @@ This project demonstrates CRUD operations, REST APIs, authentication, and databa
 - Borrowed Books
 - Total Members
 - Recent Transactions
-
 ---
 
 # 🛠 Tech Stack
