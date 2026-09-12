@@ -187,44 +187,7 @@ MONGO_URI=your_mongodb_connection_string
 
 JWT_SECRET=your_secret_key
 ```
-
 ---
-
-# 📸 Screenshots:
-
-## 🏠 Home Page
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 📚 Book Management
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 👤 User Dashboard
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 📖 Issue Book
-
-```
-(Add Screenshot Here)
-```
-
----
-
-# 🎯 Workflow
 
 ```text
 User Login
