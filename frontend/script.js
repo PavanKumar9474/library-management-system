@@ -26,10 +26,128 @@ function formatDate(dateString) {
     });
 }
 
+// Custom fetch wrapper to include auth token
+async function fetchAPI(endpoint, options = {}) {
+    const token = localStorage.getItem("token");
+    const headers = {
+        "Content-Type": "application/json",
+        ...options.headers
+    };
+    
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+    
+    const config = {
+        ...options,
+        headers
+    };
+    
+    const response = await fetch(endpoint, config);
+    if (response.status === 401) {
+        // Unauthorized, clear token and redirect
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        if (!window.location.pathname.endsWith("login.html") && !window.location.pathname.endsWith("register.html")) {
+            window.location.href = "login.html";
+        }
+    }
+    return response;
+}
+
+// Authentication check
+function checkAuth() {
+    const token = localStorage.getItem("token");
+    const currentPage = window.location.pathname.split("/").pop();
+    const isAuthPage = currentPage === "login.html" || currentPage === "register.html";
+    
+    if (!token && !isAuthPage) {
+        window.location.href = "login.html";
+    } else if (token && isAuthPage) {
+        window.location.href = "dashboard.html";
+    }
+    
+    // Inject Logout button if not on auth page
+    if (token && !isAuthPage) {
+        const navList = document.querySelector("nav ul");
+        if (navList && !document.getElementById("logoutBtn")) {
+            const li = document.createElement("li");
+            li.innerHTML = '<a href="#" id="logoutBtn" style="color: #ef4444;">Logout</a>';
+            navList.appendChild(li);
+            document.getElementById("logoutBtn").addEventListener("click", function(e) {
+                e.preventDefault();
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.href = "login.html";
+            });
+        }
+    }
+}
+
+// Auth Handlers
+async function handleLogin(e) {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    
+    try {
+        const response = await fetch(`${API_URL}auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            localStorage.setItem("token", result.data.token);
+            localStorage.setItem("user", JSON.stringify(result.data));
+            showMessage("message", result.message, "success");
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1000);
+        } else {
+            showMessage("message", result.message || "Login failed", "error");
+        }
+    } catch (error) {
+        showMessage("message", "An error occurred during login", "error");
+    }
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const form = e.target;
+    const username = form.username.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    
+    try {
+        const response = await fetch(`${API_URL}auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            localStorage.setItem("token", result.data.token);
+            localStorage.setItem("user", JSON.stringify(result.data));
+            showMessage("message", result.message, "success");
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1000);
+        } else {
+            showMessage("message", result.message || "Registration failed", "error");
+        }
+    } catch (error) {
+        showMessage("message", "An error occurred during registration", "error");
+    }
+}
+
 // ==================== DASHBOARD ====================
 async function loadDashboard() {
     try {
-        const response = await fetch(`${API_URL}dashboard/`);
+        const response = await fetchAPI(`${API_URL}dashboard/`);
         const result = await response.json();
         
         if (result.success) {
@@ -124,7 +242,7 @@ function renderLibraryStatsChart(data) {
 
 async function loadRecentBooks() {
     try {
-        const response = await fetch(`${API_URL}books/?limit=5`);
+        const response = await fetchAPI(`${API_URL}books/?limit=5`);
         const result = await response.json();
         
         if (result.success) {
@@ -159,7 +277,7 @@ async function loadBooks(search = "") {
             ? `${API_URL}books/?search=${encodeURIComponent(search)}`
             : `${API_URL}books/`;
         
-        const response = await fetch(url);
+        const response = await fetchAPI(url);
         const result = await response.json();
         
         if (result.success) {
@@ -227,7 +345,7 @@ function refreshBooks() {
 
 async function editBook(bookId) {
     try {
-        const response = await fetch(`${API_URL}/api/books/${bookId}`);
+        const response = await fetchAPI(`${API_URL}books/${bookId}`);
         const result = await response.json();
         
         if (result.success) {
@@ -249,7 +367,7 @@ async function deleteBook(bookId) {
     }
     
     try {
-        const response = await fetch(`${API_URL}/api/books/${bookId}`, {
+        const response = await fetchAPI(`${API_URL}books/${bookId}`, {
             method: "DELETE"
         });
         
@@ -323,11 +441,8 @@ async function handleAddBook(e) {
         const url = bookId ? `${API_URL}/books/${bookId}` : `${API_URL}/books/`;
         const method = bookId ? "PUT" : "POST";
         
-        const response = await fetch(url, {
+        const response = await fetchAPI(url, {
             method: method,
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(data)
         });
         
@@ -357,7 +472,7 @@ async function handleAddBook(e) {
 // ==================== ISSUE BOOK ====================
 async function populateIssueBookDropdown() {
     try {
-        const response = await fetch(`${API_URL}books/`);
+        const response = await fetchAPI(`${API_URL}books/`);
         const result = await response.json();
         
         if (result.success) {
@@ -392,9 +507,8 @@ async function handleIssueBook(e) {
     };
     
     try {
-        const response = await fetch(`${API_URL}issues`, {
+        const response = await fetchAPI(`${API_URL}issues`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
         const result = await response.json();
@@ -414,7 +528,7 @@ async function handleIssueBook(e) {
 // ==================== RETURN BOOK ====================
 async function loadIssues() {
     try {
-        const response = await fetch(`${API_URL}issues/`);
+        const response = await fetchAPI(`${API_URL}issues/`);
         const result = await response.json();
         
         if (result.success) {
@@ -459,7 +573,7 @@ async function returnBookById(issueId) {
     if (!confirm("Are you sure you want to return this book?")) return;
     
     try {
-        const response = await fetch(`${API_URL}issues/return/${issueId}`, {
+        const response = await fetchAPI(`${API_URL}issues/return/${issueId}`, {
             method: "PUT"
         });
         
@@ -479,6 +593,7 @@ async function returnBookById(issueId) {
 
 // ==================== EVENT LISTENERS ====================
 document.addEventListener("DOMContentLoaded", function() {
+    checkAuth();
     const currentPage = window.location.pathname.split("/").pop();
     
     // Dashboard page
@@ -533,5 +648,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Return Book page
     if (currentPage === "return-book.html") {
         loadIssues();
+    }
+    
+    // Auth pages
+    if (currentPage === "login.html") {
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) loginForm.addEventListener("submit", handleLogin);
+    }
+    
+    if (currentPage === "register.html") {
+        const registerForm = document.getElementById("registerForm");
+        if (registerForm) registerForm.addEventListener("submit", handleRegister);
     }
 });
