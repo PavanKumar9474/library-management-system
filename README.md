@@ -5,7 +5,7 @@
 ### A Modern Library Management Web Application
 
 <p align="center">
-Manage books, borrowers, and library operations efficiently.
+Manage books,borrowers,and library operations efficiently.
 </p>
 
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react)
@@ -66,7 +66,6 @@ This project demonstrates CRUD operations, REST APIs, authentication, and databa
 - Borrowed Books
 - Total Members
 - Recent Transactions
-
 ---
 
 # 🛠 Tech Stack
@@ -188,44 +187,7 @@ MONGO_URI=your_mongodb_connection_string
 
 JWT_SECRET=your_secret_key
 ```
-
 ---
-
-# 📸 Screenshots:
-
-## 🏠 Home Page
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 📚 Book Management
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 👤 User Dashboard
-
-```
-(Add Screenshot Here)
-```
-
----
-
-## 📖 Issue Book
-
-```
-(Add Screenshot Here)
-```
-
----
-
-# 🎯 Workflow
 
 ```text
 User Login
