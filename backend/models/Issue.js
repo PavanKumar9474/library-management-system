@@ -11,6 +11,11 @@ const issueSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    studentEmail: {
+        type: String,
+        required: true,
+        trim: true
+    },
     bookTitle: {
         type: String,
         required: true,
@@ -20,6 +25,10 @@ const issueSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    dueDate: {
+        type: Date,
+        required: true
     },
     returnDate: {
         type: Date

@@ -71,6 +71,24 @@ const getDashboard = async (req, res) => {
     }
 };
 
+const generateReport = async (req, res) => {
+    try {
+        const issues = await Issue.find().sort({ issueDate: -1 });
+        let csv = "Student Name,Student ID,Book Title,Issue Date,Due Date,Return Date,Status,Fine,Remarks\n";
+        
+        issues.forEach(issue => {
+            csv += `"${issue.studentName}","${issue.studentId}","${issue.bookTitle}","${issue.issueDate ? issue.issueDate.toISOString().split('T')[0] : ''}","${issue.dueDate ? issue.dueDate.toISOString().split('T')[0] : ''}","${issue.returnDate ? issue.returnDate.toISOString().split('T')[0] : ''}","${issue.status}","${issue.fine}","${issue.remarks || ''}"\n`;
+        });
+        
+        res.header('Content-Type', 'text/csv');
+        res.attachment('library_report.csv');
+        return res.send(csv);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
-    getDashboard
+    getDashboard,
+    generateReport
 };

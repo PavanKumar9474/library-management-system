@@ -8,7 +8,8 @@ const {
     getBooks,
     getBookById,
     updateBook,
-    deleteBook
+    deleteBook,
+    generateQRCode
 } = require("../controllers/bookController");
 
 router.post("/", protect, addBook);
@@ -20,5 +21,7 @@ router.get("/:id", protect, getBookById);
 router.put("/:id", protect, updateBook);
 
 router.delete("/:id", protect, deleteBook);
+
+router.get("/:id/qrcode", protect, generateQRCode);
 
 module.exports = router;

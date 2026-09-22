@@ -316,15 +316,15 @@ Supports
 
 # 📝 Roadmap
 
-- [ ] Authentication
-- [ ] Book Search
-- [ ] Issue Books
-- [ ] Return Books
-- [ ] Fine Calculation
-- [ ] Email Alerts
-- [ ] Reports
-- [ ] Dashboard Analytics
-- [ ] QR Code Integration
+- [x] Authentication
+- [x] Book Search
+- [x] Issue Books
+- [x] Return Books
+- [x] Fine Calculation
+- [x] Email Alerts
+- [x] Reports
+- [x] Dashboard Analytics
+- [x] QR Code Integration
 
 ---
 

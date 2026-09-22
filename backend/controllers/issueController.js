@@ -1,5 +1,6 @@
 const Book = require("../models/Book");
 const Issue = require("../models/Issue");
+const sendEmail = require("../services/emailService");
 
 const issueBook = async (req, res) => {
     try {
@@ -7,6 +8,7 @@ const issueBook = async (req, res) => {
         const {
             studentName,
             studentId,
+            studentEmail,
             bookId,
             issueDate,
             remarks
@@ -15,6 +17,7 @@ const issueBook = async (req, res) => {
         if (
             !studentName ||
             !studentId ||
+            !studentEmail ||
             !bookId ||
             !issueDate
         ) {
@@ -58,13 +61,25 @@ const issueBook = async (req, res) => {
         book.available -= 1;
         await book.save();
 
+        const issueDateObj = new Date(issueDate);
+        const dueDate = new Date(issueDateObj);
+        dueDate.setDate(dueDate.getDate() + 14); // 14 days borrowing period
+
         const issue = await Issue.create({
             studentName,
             studentId,
+            studentEmail,
             bookTitle: book.title,
-            issueDate,
+            issueDate: issueDateObj,
+            dueDate,
             status: "Issued",
             remarks
+        });
+        
+        await sendEmail({
+            email: studentEmail,
+            subject: "Book Issued - Library Management System",
+            message: `Hello ${studentName},\n\nYou have successfully borrowed "${book.title}". Please return it by ${dueDate.toDateString()}.\n\nThank you!`
         });
 
         res.status(201).json({
@@ -149,12 +164,28 @@ const returnBook = async (req, res) => {
         await book.save();
         issue.status = "Returned";
         issue.returnDate = new Date();
+        
+        // Fine Calculation
+        const today = new Date();
+        let fine = 0;
+        if (today > issue.dueDate) {
+            const diffTime = Math.abs(today - issue.dueDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            fine = diffDays * 1; // $1 per day
+        }
+        issue.fine = fine;
 
         await issue.save();
+        
+        await sendEmail({
+            email: issue.studentEmail,
+            subject: "Book Returned - Library Management System",
+            message: `Hello ${issue.studentName},\n\nYou have successfully returned "${book.title}". ${fine > 0 ? 'Your late fine is $' + fine + '.' : 'Thank you for returning it on time!'}`
+        });
 
         res.json({
             success: true,
-            message: "Book returned successfully",
+            message: `Book returned successfully. ${fine > 0 ? 'Fine: $' + fine : ''}`,
             data: issue
         });
 

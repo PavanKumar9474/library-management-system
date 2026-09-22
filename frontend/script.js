@@ -240,6 +240,27 @@ function renderLibraryStatsChart(data) {
     `;
 }
 
+async function downloadReport() {
+    try {
+        const response = await fetchAPI(`${API_URL}dashboard/report`);
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'library_report.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } else {
+            showMessage("message", "Error downloading report", "error");
+        }
+    } catch (error) {
+        console.error("Error downloading report:", error);
+    }
+}
+
 async function loadRecentBooks() {
     try {
         const response = await fetchAPI(`${API_URL}books/?limit=5`);
@@ -321,9 +342,26 @@ function displayBooks(books) {
             <td>
                 <button class="btn btn-sm btn-primary" onclick="editBook('${book._id}')">Edit</button>
                 <button class="btn btn-sm btn-danger" onclick="deleteBook('${book._id}')">Delete</button>
+                <button class="btn btn-sm btn-outline" onclick="viewQR('${book._id}')" style="margin-top: 5px;">QR</button>
             </td>
         </tr>
     `).join("");
+}
+
+async function viewQR(bookId) {
+    try {
+        const response = await fetchAPI(`${API_URL}books/${bookId}/qrcode`);
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('qrImage').src = result.data;
+            document.getElementById('qrModal').style.display = 'flex';
+        } else {
+            showMessage("message", result.message || "Error generating QR", "error");
+        }
+    } catch (error) {
+        console.error("Error viewing QR:", error);
+        showMessage("message", "Error loading QR Code", "error");
+    }
 }
 
 async function searchBooks() {
@@ -502,6 +540,7 @@ async function handleIssueBook(e) {
         bookId: formData.get("bookId"),
         studentName: formData.get("studentName"),
         studentId: formData.get("studentId"),
+        studentEmail: formData.get("studentEmail"),
         issueDate: formData.get("issueDate"),
         remarks: formData.get("remarks")
     };
@@ -554,6 +593,7 @@ async function loadIssues() {
                     <td>${issue.studentId}</td>
                     <td>${issue.bookTitle}</td>
                     <td>${formatDate(issue.issueDate)}</td>
+                    <td>${issue.dueDate ? formatDate(issue.dueDate) : '-'}</td>
                     <td>${issue.remarks || '-'}</td>
                     <td>
                         <button class="btn btn-sm btn-success" onclick="returnBookById('${issue._id}')">

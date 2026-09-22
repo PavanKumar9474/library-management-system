@@ -103,6 +103,16 @@
 
 </section>
 
+<!-- QR Code Modal -->
+<div id="qrModal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+    <div style="background:var(--card-bg); padding:30px; border-radius:var(--radius); border:1px solid var(--border); text-align:center;">
+        <h3 style="margin-bottom:20px; color:white;">Book QR Code</h3>
+        <img id="qrImage" src="" alt="QR Code" style="margin-bottom:20px; border-radius:10px;">
+        <br>
+        <button class="btn btn-outline" onclick="document.getElementById('qrModal').style.display='none'">Close</button>
+    </div>
+</div>
+
 <footer>
     © 2026 Library Management System | Node.js • Express.js • MongoDB
 </footer>

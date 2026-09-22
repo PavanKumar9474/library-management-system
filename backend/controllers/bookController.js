@@ -1,4 +1,5 @@
 const Book = require("../models/Book");
+const QRCode = require('qrcode');
 
 const addBook = async (req, res) => {
     try {
@@ -257,10 +258,27 @@ const deleteBook = async (req, res) => {
 
 };
 
+const generateQRCode = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({ success: false, message: "Book not found" });
+        }
+        
+        const qrData = `Title: ${book.title}\nAuthor: ${book.author}\nISBN: ${book.isbn}\nCategory: ${book.category}`;
+        const qrCodeUrl = await QRCode.toDataURL(qrData);
+        
+        res.json({ success: true, data: qrCodeUrl });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     addBook,
     getBooks,
     getBookById,
     updateBook,
-    deleteBook
+    deleteBook,
+    generateQRCode
 };
